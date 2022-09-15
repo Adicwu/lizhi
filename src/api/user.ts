@@ -33,7 +33,7 @@ export async function loginVerify(param: { token: string; vercode: string }) {
     message: string;
   }>("api/demo/login.php?phase=2", formData, {
     headers: {
-      Authorization: `Bearer ${param.token}`,
+      authorization: `Bearer ${param.token}`,
     },
   });
   return {
