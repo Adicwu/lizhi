@@ -1,8 +1,8 @@
 import * as Api from "@/api";
-import IconEmail from "@/assets/img/icon-email.png";
-import IconPwd from "@/assets/img/icon-pwd.png";
-import LoginBanner from "@/assets/img/login-banner.png";
-import TestAvatar from "@/assets/img/test-avatar.png";
+import LoginBanner from "@/assets/img/iPhone_banner@2x.png";
+import IconEmail from "@/assets/img/iphone_emall@3x.png";
+import IconPwd from "@/assets/img/iphone_password@3x.png";
+import TestAvatar from "@/assets/img/iphone_tx.png";
 import { useCallback, useRef, useState } from "react";
 import AwButton from "./components/AwButton";
 import AwForm from "./components/AwForm";
@@ -24,6 +24,8 @@ export default function Login() {
   const [loginStep, setLoginStep] = useState<1 | 2>(1);
   /** 登录-token */
   const [loginToken, setLoginToken] = useState("");
+  /** 登录提示 */
+  const [loginMsg, setLoginMsg] = useState("");
 
   const getLoginParams = useCallback(
     () => ({
@@ -41,8 +43,10 @@ export default function Login() {
       if (loginResult.status === 0) {
         setLoginToken(loginResult.token);
         setLoginStep(2);
+        setLoginMsg('')
       } else {
         alert(loginResult.message);
+        setLoginMsg("密码错误或邮箱与对应的密码不相符");
       }
     } catch (e) {
       console.log(e);
@@ -102,7 +106,6 @@ export default function Login() {
                 keyword="username"
                 maxLength={16}
                 type="text"
-                defaultValue="user09"
                 ref={usernameInputComp}
                 placeholder="请输入账号"
                 icon={<img src={IconEmail} />}
@@ -111,7 +114,6 @@ export default function Login() {
                 keyword="password"
                 maxLength={32}
                 type="password"
-                defaultValue="OpenSesame"
                 placeholder="请输入密码"
                 ref={passwordInputComp}
                 icon={<img src={IconPwd} />}
@@ -124,6 +126,14 @@ export default function Login() {
             >
               下一步
             </AwButton>
+            <div
+              className="login-content__msg"
+              style={{
+                opacity: loginMsg ? 1 : 0,
+              }}
+            >
+              {loginMsg}
+            </div>
           </div>
           <div className="login-content__phase--step">
             <img src={TestAvatar} alt="" className="avatar" />
@@ -135,8 +145,7 @@ export default function Login() {
                 keyword="vercode"
                 maxLength={6}
                 type="text"
-                defaultValue="123456"
-                placeholder="请输入密码"
+                placeholder="请输入你的两步认证验证"
                 ref={vercodeInputComp}
                 icon={<img src={IconPwd} />}
               />

@@ -1,20 +1,18 @@
-import React, {
-  ReactNode,
-  useCallback,
-  useMemo,
-  useRef
-} from "react";
-
-export const FormCtx = React.createContext<{
-  check: (keyword: Keyword, v: string) => void;
-} | null>(null);
+import React, { ReactNode, useCallback, useMemo, useRef } from "react";
 
 type Keyword = string;
+type RulesMap = Map<AwFormRule["keyword"], Omit<AwFormRule, "keyword">>;
 
 export interface AwFormRule {
   keyword: Keyword;
   reg: RegExp;
+  errorMsg?: string;
 }
+
+export const FormCtx = React.createContext<{
+  check: (keyword: Keyword, v: string) => void;
+  readonly rulesMap: RulesMap;
+} | null>(null);
 
 const AwForm = (props: {
   rules: AwFormRule[];
@@ -31,16 +29,10 @@ const AwForm = (props: {
   );
   const rulesMap = useMemo(
     () =>
-      props.rules.reduce<
-        Map<
-          AwFormRule["keyword"],
-          {
-            reg: AwFormRule["reg"];
-          }
-        >
-      >((totol, item) => {
+      props.rules.reduce<RulesMap>((totol, item) => {
         totol.set(item.keyword, {
           reg: item.reg,
+          errorMsg: item.errorMsg,
         });
         return totol;
       }, new Map()),
@@ -60,9 +52,15 @@ const AwForm = (props: {
     },
     [props.onCheck, result]
   );
-  return (
-    <FormCtx.Provider value={{ check }}>{props.children}</FormCtx.Provider>
+  const provide = useMemo(
+    () => ({
+      check,
+      rulesMap,
+    }),
+    []
   );
+
+  return <FormCtx.Provider value={provide}>{props.children}</FormCtx.Provider>;
 };
 
 export default React.memo(AwForm, () => true);

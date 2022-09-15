@@ -5,9 +5,9 @@
   border: 1px solid #D0D3D6;
   border-radius: 6px;
   transition: all .25s;
-  margin-bottom: 20px;
   display: flex;
   box-sizing: border-box;
+  margin-bottom: 20px;
 
   &__icon {
     display: flex;
@@ -15,20 +15,43 @@
     align-items: center;
     height: 100%;
     aspect-ratio: 1/1;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   &__control {
     outline: unset;
     border: unset;
     font-size: 16px;
+    width: 100%;
+    height: 100%;
     color: #3B3C3D;
+    background: unset;
 
     &::placeholder {
       color: #B1B3B8;
     }
   }
 
+  &__error {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translateY(120%);
+    font-size: 14px;
+    color: #FA5757;
+    transition: all .25s;
+  }
+
   &:focus-within {
     border-color: #3371FF;
+  }
+
+  &.error {
+    border-color: #FA5757;
+    margin-bottom: 30px;
   }
 }
